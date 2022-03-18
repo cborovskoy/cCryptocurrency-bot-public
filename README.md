@@ -21,7 +21,7 @@
   <td><img src="https://github.com/cborovskoy/cborovskoy/blob/17307616633d5fb4d2bd38643a2a3729d546a094/pics/logo_python-telegram-bot.png"
            alt="Logo python-telegram-bot" width="40" height="40"/></td>
   <td><img src="https://github.com/cborovskoy/cborovskoy/blob/main/pics/logo_sqlite3.svg"
-           alt="Logo python-telegram-bot" width="40" height="40"/></td>
+           alt="Logo SQLite" width="40" height="40"/></td>
   <td><img src="https://github.com/cborovskoy/cborovskoy/blob/17307616633d5fb4d2bd38643a2a3729d546a094/pics/logo_plotly.svg"
            alt="Logo plotly" width="40" height="40"/></td>
   <td><img src="https://github.com/cborovskoy/cborovskoy/blob/17307616633d5fb4d2bd38643a2a3729d546a094/pics/logo_pandas.svg"
