@@ -16,16 +16,20 @@
 ### Technologies
 <table>
 <tr>
-  <td><img src="https://github.com/cborovskoy/cborovskoy/blob/4b90deca470bdcb35efb4f23274326b812f3d8ad/pics/logo_js.svg" alt="JavaScript" width="40" height="40"/></td>
-  <td><img src="https://github.com/cborovskoy/cborovskoy/blob/eaf3735c17733b7501f6134f86ce3987cf24d2d2/pics/logo_react.svg" alt="React" width="40" height="40"/></td>
-  <td><img src="https://github.com/cborovskoy/cborovskoy/blob/0e36e90968052547f4f106e893208b28936d319e/pics/logo_html.svg" alt="HTML" width="40" height="40"/></td>
-  <td><img src="https://github.com/cborovskoy/cborovskoy/blob/f9060f2f19400851c66ae29a50a14b55a173a21c/pics/logo_css.svg" alt="CSS" width="40" height="40"/></td>
+  <td><img src="https://github.com/cborovskoy/cborovskoy/blob/17307616633d5fb4d2bd38643a2a3729d546a094/pics/logo_python.svg"
+           alt="Logo Python" width="40" height="40"/></td>
+  <td><img src="https://github.com/cborovskoy/cborovskoy/blob/17307616633d5fb4d2bd38643a2a3729d546a094/pics/logo_python-telegram-bot.png"
+           alt="Logo python-telegram-bot" width="40" height="40"/></td>
+  <td><img src="https://github.com/cborovskoy/cborovskoy/blob/17307616633d5fb4d2bd38643a2a3729d546a094/pics/logo_plotly.svg"
+           alt="Logo plotly" width="40" height="40"/></td>
+  <td><img src="https://github.com/cborovskoy/cborovskoy/blob/17307616633d5fb4d2bd38643a2a3729d546a094/pics/logo_pandas.svg"
+           alt="Logo pandas" width="40" height="40"/></td>
 </tr> 
 <tr>
-  <td>JavaScript</td>
-  <td>React</td>
-  <td>HTML</td>
-  <td>CSS</td>
+  <td>Python</td>
+  <td>python-telegram-bot</td>
+  <td>plotly</td>
+  <td>pandas</td>
 </tr>
 </table>
 
