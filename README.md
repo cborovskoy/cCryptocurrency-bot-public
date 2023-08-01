@@ -1,5 +1,4 @@
 # A telegram bot that sends Bitcoin price charts
-> The bot is working, but **temporarily disabled the generation of graphs**
 
 <a href="https://t.me/ccryptocurrency_bot" target="_blank">
   <img src="https://github.com/cborovskoy/cborovskoy/blob/17307616633d5fb4d2bd38643a2a3729d546a094/pics/projects/bot-bitcoin-charts.jpg" />
