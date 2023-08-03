@@ -19,8 +19,6 @@
            alt="Logo Python" width="40" height="40"/></td>
   <td><img src="https://github.com/cborovskoy/cborovskoy/blob/246a967fcff149831ddbe7e6f8522694223932f2/pics/logo_aiogram.png"
            alt="Logo aiogram" width="40" height="40"/></td>
-  <td><img src="https://github.com/cborovskoy/cborovskoy/blob/main/pics/logo_sqlite3.svg"
-           alt="Logo SQLite" width="40" height="40"/></td>
   <td><img src="https://github.com/cborovskoy/cborovskoy/blob/17307616633d5fb4d2bd38643a2a3729d546a094/pics/logo_plotly.svg"
            alt="Logo plotly" width="40" height="40"/></td>
   <td><img src="https://github.com/cborovskoy/cborovskoy/blob/17307616633d5fb4d2bd38643a2a3729d546a094/pics/logo_pandas.svg"
@@ -29,7 +27,6 @@
 <tr>
   <td>Python</td>
   <td>aiogram</td>
-  <td>SQLite</td>
   <td>plotly</td>
   <td>pandas</td>
 </tr>
