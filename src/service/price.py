@@ -1,23 +1,26 @@
-from apscheduler.schedulers.asyncio import AsyncIOScheduler
 import logging
-import requests
-import datetime
+import yfinance as yf
+from requests import Session
+from requests_cache import CacheMixin, SQLiteCache
+from requests_ratelimiter import LimiterMixin, MemoryQueueBucket
+from pyrate_limiter import Duration, RequestRate, Limiter
 
-from src.db.sqlite_db import add_price_sql
 
 logger = logging.getLogger(__name__)
 
 
-async def save_price():
-    coindesk_api_url = 'https://api.coindesk.com/v1/bpi/currentprice.json'
-    response = requests.get(coindesk_api_url).json()
-    price = response['bpi']['USD']['rate_float']
-    date_time = datetime.datetime.utcnow()
-    add_price_sql(price=price, date_time_now=date_time)
+class CachedLimiterSession(CacheMixin, LimiterMixin, Session):
+    pass
 
 
-async def schedule_jobs(scheduler: AsyncIOScheduler):
-    job_id = f'get_price'
-    if scheduler.get_job(job_id=job_id):
-        scheduler.remove_job(job_id=job_id)
-    scheduler.add_job(func=save_price, trigger='interval', seconds=2, id=job_id)
+async def get_historical_price(period: str, interval: str):
+    session = CachedLimiterSession(
+        limiter=Limiter(RequestRate(1, Duration.SECOND * 2)),  # max 1 requests per 2 seconds
+        bucket_class=MemoryQueueBucket,
+        backend=SQLiteCache("yfinance.cache"),
+    )
+
+    btc_usd = yf.Ticker("BTC-USD", session=session)
+    hist = btc_usd.history(period=period, interval=interval)
+    return hist
+
