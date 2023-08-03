@@ -1,48 +1,46 @@
 import plotly.graph_objects as go
 import datetime
-
-from src.config import CT_CANDLESTICK, CT_LINE
-from src.db.work_with_df import get_configured_df_and_data_info
-
+import pandas as pd
 
 COLOR_BG = '#191b20'
 
 
-def make_chart(chart_type: str, candle_time=None):
-    time_intervals = {None: 2,
-                      '1T': 2,
-                      '15T': 30,
-                      '1H': 100}
+async def make_chart(df: pd.DataFrame) -> bytes:
+    is_scatter = df.shape[0] > 1 and (df.index[1] - df.index[0]) == datetime.timedelta(minutes=1)
 
-    if chart_type == CT_CANDLESTICK:
+    if is_scatter:
+        figure_data = [go.Scatter(x=df.index, y=df['Close'], line=dict(color='white', width=2))]
+    else:
+        figure_data = [go.Candlestick(x=df.index, open=df['Open'], high=df['High'], low=df['Low'], close=df['Close'],
+                                      increasing_line_color='#02C076', decreasing_line_color='#CF304A')]
 
-        df, data_info = get_configured_df_and_data_info(chart_type=chart_type,
-                                                        candle_time=candle_time,
-                                                        time_interval=time_intervals[candle_time])
+    fig = go.Figure(data=figure_data)
 
-        fig = go.Figure(data=[go.Candlestick(x=df['Date'],
-                                             open=df['open'], high=df['high'],
-                                             low=df['low'], close=df['close'],
-                                             increasing_line_color='#02C076',
-                                             decreasing_line_color='#CF304A')])
+    max_price = df['High'].max()
+    max_price_date = df['High'].idxmax()
+    min_price = df['Low'].min()
+    min_price_date = df['Low'].idxmin()
+    last_price = df.tail(1)['Close'].item()
 
-    elif chart_type == CT_LINE:
-        df, data_info = get_configured_df_and_data_info(chart_type=chart_type, time_interval=2)
-        fig = go.Figure([go.Scatter(x=df['Date'], y=df['price'], line=dict(color='white', width=2))])
+    # Узнаём, больше ли последний элемент чем предпоследний
+    ratio_of_last_and_penultimate = ''
+    for price in df['Close'][::-1]:
+        if price != last_price:
+            if last_price > price:
+                ratio_of_last_and_penultimate = '>'
+            else:
+                ratio_of_last_and_penultimate = '<'
+            break
 
     direction_annot = {}
-    for i in ['min', 'max']:
-        temp_date_time = str(data_info[f'{i}_price_date'])
-        price_date = datetime.datetime(int(temp_date_time[:4]), int(temp_date_time[5:7]), int(temp_date_time[8:10]),
-                                       int(temp_date_time[11:13]), int(temp_date_time[14:16]), 0)
-
-        temp_timedelta = price_date - (fig.data[0].x[0])
+    for num, date in enumerate([min_price_date, max_price_date]):
+        temp_timedelta = date - (fig.data[0].x[0])
         temp_ax = -15
         temp_xanchor = 'right'
         if temp_timedelta < datetime.timedelta(minutes=8):
             temp_ax = 15
             temp_xanchor = 'left'
-        direction_annot[i] = {'ax': temp_ax, 'xanchor': temp_xanchor}
+        direction_annot['min' if num == 0 else 'max'] = {'ax': temp_ax, 'xanchor': temp_xanchor}
 
     candlestick_template = go.layout.Template()
     candlestick_template.layout.annotations = [
@@ -61,8 +59,8 @@ def make_chart(chart_type: str, candle_time=None):
         # Добавляем указатель на максимальную цену
         dict(
             name='show_max_price',
-            text=f"<b>{round(data_info['max_price'], 2)}<b>",
-            x=data_info['max_price_date'], y=data_info['max_price'],
+            text=f"<b>{round(max_price, 2)}<b>",
+            x=max_price_date, y=max_price,
             ax=direction_annot['max']['ax'], ay=0,
             xref='x', yref='y', showarrow=True,
             xanchor=direction_annot['max']['xanchor'], yanchor='middle',
@@ -71,8 +69,8 @@ def make_chart(chart_type: str, candle_time=None):
         # Добавляем указатель на минимальную цену
         dict(
             name='show_min_price',
-            text=f"<b>{round(data_info['min_price'], 2)}<b>",
-            x=data_info['min_price_date'], y=data_info['min_price'],
+            text=f"<b>{round(min_price, 2)}<b>",
+            x=min_price_date, y=min_price,
             ax=direction_annot['min']['ax'], ay=0,
             xref='x', yref='y', showarrow=True,
             xanchor=direction_annot['min']['xanchor'], yanchor='middle',
@@ -81,8 +79,8 @@ def make_chart(chart_type: str, candle_time=None):
         # Добавляем указатель на последнюю цену
         dict(
             name='show_last_price',
-            text=f"<b>{round(data_info['last_price'], 2)}<b>",
-            x=1.018, y=data_info['last_price'],
+            text=f"<b>{round(last_price, 2)}<b>",
+            x=1.018, y=last_price,
             xref='paper', yref='y',
             font=dict(color='white'),
             showarrow=False, xanchor='left'
@@ -91,19 +89,19 @@ def make_chart(chart_type: str, candle_time=None):
 
     ]
 
-    y_offset_shape = (data_info['max_price'] - data_info['min_price']) * 0.03
+    y_offset_shape = (max_price - min_price) * 0.03
     fig.add_shape(type="path",
-                  path=f" M 1.005 {data_info['last_price']}"
-                       f" L 1.02 {data_info['last_price'] + y_offset_shape}"
-                       f" L 1.15 {data_info['last_price'] + y_offset_shape}"
-                       f" L 1.15 {data_info['last_price'] - y_offset_shape}"
-                       f" L 1.02 {data_info['last_price'] - y_offset_shape}"
+                  path=f" M 1.005 {last_price}"
+                       f" L 1.02 {last_price + y_offset_shape}"
+                       f" L 1.15 {last_price + y_offset_shape}"
+                       f" L 1.15 {last_price - y_offset_shape}"
+                       f" L 1.02 {last_price - y_offset_shape}"
                        f" Z",
                   line=dict(
-                      color="#BB2742" if data_info['ratio_of_last_and_penultimate'] == '<' else '#019362',
+                      color="#BB2742" if ratio_of_last_and_penultimate == '<' else '#019362',
                       width=2,
                   ),
-                  fillcolor="#A81E3A" if data_info['ratio_of_last_and_penultimate'] == '<' else '#008057',
+                  fillcolor="#A81E3A" if ratio_of_last_and_penultimate == '<' else '#008057',
                   )
     fig.update_shapes(dict(xref='paper', yref='y'))
 
@@ -128,18 +126,4 @@ def make_chart(chart_type: str, candle_time=None):
                       font={'size': 18},
                       template=candlestick_template)
 
-    img_bytes = fig.to_image(format="png")
-    last_price = round(data_info["last_price"], 2)
-    return img_bytes, last_price
-
-
-def main():
-    # th_time_chart = Process(target=start_cyclic_charts_gen, args=(CT_LINE,))
-    # th_1m_chart = Process(target=start_cyclic_charts_gen, args=(CT_CANDLESTICK, '1T'))
-    # th_15m_chart = Process(target=start_cyclic_charts_gen, args=(CT_CANDLESTICK, '15T'))
-    # th_1h_chart = Process(target=start_cyclic_charts_gen, args=(CT_CANDLESTICK, '1H'))
-    pass
-
-
-if __name__ == '__main__':
-    main()
+    return fig.to_image(format="png")
