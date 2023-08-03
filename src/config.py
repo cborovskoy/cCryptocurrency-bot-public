@@ -3,15 +3,9 @@ from dataclasses import dataclass
 from pathlib import PurePath, Path
 import configparser
 
-LABEL_TIME = 'Time'
 LABEL_1M = '1m'
 LABEL_15M = '15m'
-LABEL_1H = '1H'
-
-# chart types
-CT_CANDLESTICK = 'candlestick'
-CT_LINE = 'LINE'
-CT_5MINUTES_TEST = 'CT_5MINUTES_TEST'
+LABEL_1H = '60m'
 
 
 @dataclass
