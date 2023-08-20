@@ -8,9 +8,8 @@
 
 
 **How the bot works:**
-- Receives data from [coindesk](https://www.coindesk.com/coindesk-api) and writes to its database
-- In an infinite loop, it creates graphs for 4 time intervals: hourly, 15 and 1 minute, and hourly
-- When clicking on the button with an interval, the user receives the last created picture with a graph of the price of bitcoin
+- Receives historical data on the price of bitcoin via [yfinance](https://github.com/ranaroussi/yfinance)
+- Creates a graph based on this data and sends it to the user
 
 ### Technologies
 <table>
