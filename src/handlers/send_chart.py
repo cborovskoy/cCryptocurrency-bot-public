@@ -23,8 +23,8 @@ async def all_cb_handler(callback: CallbackQuery):
 
 
 async def send_chart(user_id, bot: Bot, interval: str = LABEL_1H, msg_id=None):
-    period = {LABEL_1M: '1d', LABEL_15M: '2d', LABEL_1H: '3d'}[interval]
-    hist_df = await get_historical_price(period=period, interval=interval)
+    period = {LABEL_1M: 1, LABEL_15M: 2, LABEL_1H: 3}[interval]
+    hist_df = await get_historical_price(period_in_days=period, interval=interval)
 
     chart_img_bytes = await make_chart(df=hist_df)
     chart_img = BufferedInputFile(chart_img_bytes, filename="chart.png")
