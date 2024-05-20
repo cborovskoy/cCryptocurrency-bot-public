@@ -1,8 +1,8 @@
 requests==2.31.0
-aiogram==3.0.0b9
-plotly==5.15.0
-pandas==2.0.3
+aiogram==3.6.0
+plotly==5.22.0
+pandas==2.2.2
 kaleido==0.2.1
-requests-cache==1.1.0
-requests-ratelimiter==0.4.1
-yfinance==0.2.26
+requests-cache==1.2.0
+requests-ratelimiter==0.6.0
+yfinance==0.2.38
